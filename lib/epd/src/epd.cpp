@@ -25,7 +25,7 @@
  */
 
 #include <stdlib.h>
-#include "epd2in9b.h"
+#include "epd.h"
 
 Epd::~Epd() {
 };
@@ -72,16 +72,16 @@ int Epd::Init(void) {
     /*
     SendCommand(0x44);   // set RAM x address start/end, in page 36
     SendData(0x00);    // RAM x address start at 00h;
-    SendData(0x0f);    // RAM x address end at 0fh(15+1)*8->128 
+    SendData(0x0f);    // RAM x address end at 0fh(15+1)*8->128
     SendCommand(0x45);   // set RAM y address start/end, in page 37
     SendData(0x00);    // RAM y address start at 127h;
-    SendData(0x00);      
+    SendData(0x00);
     SendData(0x27);    // RAM y address end at 00h;
     SendData(0x01);    */
-    
+
     SendCommand(0x04);   // set VSH,VSL value
     SendData(0x41);    //      2D9  15v
-    SendData(0xa8);   //      2D9   5v 
+    SendData(0xa8);   //      2D9   5v
     SendData(0x32);    //      2D9  -15v
     SendCommand(0x2C);           // vcom
     SendData(0x68);           //-2.6V
@@ -129,8 +129,8 @@ void Epd::SetPartialWindowAux(const unsigned char* buffer, int x, int y, int w, 
 
   if (buffer != NULL) {
         for(int i = 0; i < w  / 8 * l; i++) {
-            SendData(buffer[i]);  
-        }  
+            SendData(buffer[i]);
+        }
   } else {
         for(int i = 0; i < w  / 8 * l; i++) {
           switch(color){
@@ -142,10 +142,10 @@ void Epd::SetPartialWindowAux(const unsigned char* buffer, int x, int y, int w, 
               SendData(0xFF);
               break;
           }
-        }  
+        }
     }
   DelayMs(2);
-  SendCommand(0x22); 
+  SendCommand(0x22);
 }
 
 /**
@@ -159,19 +159,19 @@ void Epd::WaitUntilIdle(void) {
     if(busy_value == LOW){
       break;
     }
-  }     
+  }
 }
 
 /**
- *  @brief: module reset. 
- *          often used to awaken the module in deep sleep, 
+ *  @brief: module reset.
+ *          often used to awaken the module in deep sleep,
  *          see Epd::Sleep();
  */
 void Epd::Reset(void) {
     DigitalWrite(reset_pin, LOW);
     DelayMs(200);
     DigitalWrite(reset_pin, HIGH);
-    DelayMs(200);   
+    DelayMs(200);
 }
 
 /**
@@ -185,18 +185,18 @@ void Epd::SetPartialWindow(const unsigned char* buffer_black, const unsigned cha
 void Epd::set_xy_window(unsigned char xs, unsigned char xe, unsigned int ys, unsigned int ye){
   SendCommand(0x44);    // set RAM x address start/end, in page 36
   SendData(xs);    // RAM x address start at 00h;
-  SendData(xe);    // RAM x address end at 0fh(12+1)*8->104 
+  SendData(xe);    // RAM x address end at 0fh(12+1)*8->104
   SendCommand(0x45);   // set RAM y address start/end, in page 37
   SendData(ys);    // RAM y address start at 0;
-  SendData(ys>>8);   
-  SendData(ye);    // RAM y address end at 
+  SendData(ys>>8);
+  SendData(ye);    // RAM y address end at
   SendData(ye>>8);   // RAM y address end at
 }
 
 void Epd::set_xy_counter(unsigned char x, unsigned char y){
-  SendCommand(0x4E);    // set RAM x address count 
+  SendCommand(0x4E);    // set RAM x address count
   SendData(x);
-  SendCommand(0x4F);   // set RAM y address count  
+  SendCommand(0x4F);   // set RAM y address count
   SendData(y);
   SendData(y>>8);
 }
@@ -214,7 +214,7 @@ void Epd::SetPartialWindowBlack(const unsigned char* buffer_black, int x, int y,
  *  @brief: transmit partial data to the red part of SRAM
  */
 void Epd::SetPartialWindowRed(const unsigned char* buffer_red, int x, int y, int w, int l) {
-  SetPartialWindowAux(buffer_red, x, y, w, l, COLOR_RED); 
+  SetPartialWindowAux(buffer_red, x, y, w, l, COLOR_RED);
 }
 
 /**
@@ -235,12 +235,12 @@ void Epd::ClearFrame(void) {
   this->set_xy_counter(0, 0);
   SendCommand(0x24); // Write RAM (B/W)
   for (int i = 0; i < this->width * this->height / 8; i++) {
-    SendData(0xFF);  
+    SendData(0xFF);
   }
 
-  SendCommand(0x26); // Write RAM (red)  
+  SendCommand(0x26); // Write RAM (red)
   for (int i = 0; i < this->width * this->height / 8; i++) {
-    SendData(0x00);  
+    SendData(0x00);
   }
   SendCommand(0x22);
 }
@@ -255,9 +255,9 @@ void Epd::DisplayFrame(void) {
 }
 
 /**
- * @brief: After this command is transmitted, the chip would enter the deep-sleep mode to save power. 
- *         The deep sleep mode would return to standby by hardware reset. The only one parameter is a 
- *         check code, the command would be executed if check code = 0xA5. 
+ * @brief: After this command is transmitted, the chip would enter the deep-sleep mode to save power.
+ *         The deep sleep mode would return to standby by hardware reset. The only one parameter is a
+ *         check code, the command would be executed if check code = 0xA5.
  *         You can use Epd::Reset() to awaken and use Epd::Init() to initialize.
  */
 void Epd::Sleep() {
@@ -268,5 +268,3 @@ void Epd::Sleep() {
 
 
 /* END OF FILE */
-
-
