@@ -35,18 +35,21 @@
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  Serial.print("enter setup code");
+  Serial.print("enter setup code\n");
   Epd epd;
 
   if (epd.Init() != 0) {
-    Serial.print("e-Paper init failed");
+    Serial.print("e-Paper init failed\n");
     return;
   }
 
-  Serial.print("e-Paper init success");
+  Serial.print("e-Paper init success\n");
+
+  //epd.SetPartialWindow(IMAGE_BLACK, IMAGE_RED, 0, 0, 15, 295);
 
   /* This clears the SRAM of the e-paper display */
   epd.ClearFrame();
+  epd.DisplayFrame();
 
   /**
     * Due to RAM not enough in Arduino UNO, a frame buffer is not allowed.
@@ -57,10 +60,12 @@ void setup() {
   unsigned char image[1024];
   Paint paint(image, 128, 18);    //width should be the multiple of 8 
 
+  //paint.SetRotate(ROTATE_270);
   paint.Clear(UNCOLORED);
   paint.DrawStringAt(0, 0, "e-Paper Demo", &Font12, COLORED);
-  epd.SetPartialWindowBlack(paint.GetImage(), 24, 32, paint.GetWidth(), paint.GetHeight());
-
+  epd.SetPartialWindowBlack(paint.GetImage(), 12, 32, paint.GetWidth(), paint.GetHeight());
+  //epd.SetPartialWindowBlack(paint.GetImage(), 0, 0, paint.GetWidth(), paint.GetHeight());
+  epd.DisplayFrame();
   paint.Clear(COLORED);
   paint.DrawStringAt(2, 2, "Hello world", &Font16, UNCOLORED);
   epd.SetPartialWindowRed(paint.GetImage(), 0, 64, paint.GetWidth(), paint.GetHeight());
@@ -86,14 +91,15 @@ void setup() {
   paint.DrawFilledCircle(32, 32, 30, COLORED);
   epd.SetPartialWindowRed(paint.GetImage(), 64, 200, paint.GetWidth(), paint.GetHeight());
 
-  /* This displays the data from the SRAM in e-Paper module */
+
+  // This displays the data from the SRAM in e-Paper module
   epd.DisplayFrame();
 
-  /* This displays an image */
-  epd.DisplayFrame(IMAGE_BLACK, IMAGE_RED);
+  // This displays an image
+  //epd.DisplayFrame(IMAGE_BLACK, IMAGE_RED);
 
-  /* Deep sleep */
-  epd.Sleep();
+  // Deep sleep
+  //epd.Sleep();
 }
 
 void loop() {

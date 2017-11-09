@@ -30,8 +30,11 @@
 #include "epdif.h"
 
 // Display resolution
-#define EPD_WIDTH       128
-#define EPD_HEIGHT      296
+#define EPD_WIDTH       104
+#define EPD_HEIGHT      212
+
+//#define EPD_WIDTH       128
+//#define EPD_HEIGHT      296
 
 // EPD2IN9B commands
 #define PANEL_SETTING                               0x00
@@ -42,10 +45,10 @@
 #define POWER_ON_MEASURE                            0x05
 #define BOOSTER_SOFT_START                          0x06
 #define DEEP_SLEEP                                  0x07
-#define DATA_START_TRANSMISSION_1                   0x10
+#define DATA_START_TRANSMISSION_1                   0x24
 #define DATA_STOP                                   0x11
 #define DISPLAY_REFRESH                             0x12
-#define DATA_START_TRANSMISSION_2                   0x13
+#define DATA_START_TRANSMISSION_2                   0x26
 #define PLL_CONTROL                                 0x30
 #define TEMPERATURE_SENSOR_COMMAND                  0x40
 #define TEMPERATURE_SENSOR_CALIBRATION              0x41
@@ -66,6 +69,9 @@
 #define ACTIVE_PROGRAM                              0xA1
 #define READ_OTP_DATA                               0xA2
 #define POWER_SAVING                                0xE3
+
+#define COLOR_BW  0x01
+#define COLOR_RED 0x02
 
 class Epd : EpdIf {
 public:
@@ -88,6 +94,9 @@ public:
     void Sleep(void);
 
 private:
+    void set_xy_window(unsigned char xs, unsigned char xe, unsigned int ys, unsigned int ye);
+    void set_xy_counter(unsigned char x, unsigned char y);
+    void SetPartialWindowAux(const unsigned char* buffer, int x, int y, int w, int l, int color);
     unsigned int reset_pin;
     unsigned int dc_pin;
     unsigned int cs_pin;
