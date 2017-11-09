@@ -145,7 +145,6 @@ void Epd::SetPartialWindowAux(const unsigned char* buffer, int x, int y, int w, 
         }
     }
   DelayMs(2);
-  SendCommand(0x22);
 }
 
 /**
@@ -222,8 +221,6 @@ void Epd::SetPartialWindowRed(const unsigned char* buffer_red, int x, int y, int
  */
 void Epd::DisplayFrame(const unsigned char* frame_buffer_black, const unsigned char* frame_buffer_red) {
   this->SetPartialWindow(frame_buffer_black, frame_buffer_red, 0, 0, this->width, this->height);
-
-  SendCommand(0x22);
   this->DisplayFrame();
 }
 
@@ -242,13 +239,14 @@ void Epd::ClearFrame(void) {
   for (int i = 0; i < this->width * this->height / 8; i++) {
     SendData(0x00);
   }
-  SendCommand(0x22);
+
 }
 
 /**
  * @brief: This displays the frame data from SRAM
  */
 void Epd::DisplayFrame(void) {
+  SendCommand(0x22);
   SendData(0xC7);    //Load LUT from MCU(0x32), Display update
   SendCommand(0x20);
   WaitUntilIdle();
