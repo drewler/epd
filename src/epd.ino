@@ -45,8 +45,6 @@ void setup() {
 
   Serial.print("e-Paper init success\n");
 
-  //epd.SetPartialWindow(IMAGE_BLACK, IMAGE_RED, 0, 0, 15, 295);
-
   /* This clears the SRAM of the e-paper display */
   epd.ClearFrame();
   epd.DisplayFrame();
@@ -64,7 +62,7 @@ void setup() {
   paint.Clear(UNCOLORED);
   paint.DrawStringAt(0, 0, "e-Paper Demo", &Font12, COLORED);
   epd.SetPartialWindowBlack(paint.GetImage(), 12, 32, paint.GetWidth(), paint.GetHeight());
-  //epd.SetPartialWindowBlack(paint.GetImage(), 0, 0, paint.GetWidth(), paint.GetHeight());
+
   epd.DisplayFrame();
   paint.Clear(COLORED);
   paint.DrawStringAt(2, 2, "Hello world", &Font16, UNCOLORED);
@@ -90,7 +88,6 @@ void setup() {
   paint.Clear(UNCOLORED);
   paint.DrawFilledCircle(32, 32, 30, COLORED);
   epd.SetPartialWindowRed(paint.GetImage(), 64, 200, paint.GetWidth(), paint.GetHeight());
-
 
   // This displays the data from the SRAM in e-Paper module
   epd.DisplayFrame();
