@@ -261,10 +261,9 @@ void Epd::DisplayFrame(void) {
  *         You can use Epd::Reset() to awaken and use Epd::Init() to initialize.
  */
 void Epd::Sleep() {
-  /*SendCommand(DEEP_SLEEP);
-  SendData(0xa5);*/
+  SendCommand(0x0F);
+  SendData(0x01);
   return;
 }
-
 
 /* END OF FILE */

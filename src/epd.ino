@@ -96,10 +96,10 @@ void setup() {
   epd.DisplayFrame();
 
   // This displays an image
-  //epd.DisplayFrame(IMAGE_BLACK, IMAGE_RED);
+  epd.DisplayFrame(IMAGE_BLACK, IMAGE_RED);
 
   // Deep sleep
-  //epd.Sleep();
+  epd.Sleep();
 }
 
 void loop() {
