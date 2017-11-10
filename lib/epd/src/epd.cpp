@@ -101,10 +101,29 @@ void Epd::SendData(unsigned char data) {
   SpiTransfer(data);
 }
 
+void Epd::SetXYWindow(unsigned char xs, unsigned char xe, unsigned int ys, unsigned int ye){
+  SendCommand(RAM_X_START_END);    // set RAM x address start/end, in page 36
+  SendData(xs);    // RAM x address start at 00h;
+  SendData(xe);    // RAM x address end at 0fh(12+1)*8->104
+  SendCommand(RAM_Y_START_END);   // set RAM y address start/end, in page 37
+  SendData(ys);    // RAM y address start at 0;
+  SendData(ys>>8);
+  SendData(ye);    // RAM y address end at
+  SendData(ye>>8);   // RAM y address end at
+}
+
+void Epd::SetXYCounter(unsigned char x, unsigned char y){
+  SendCommand(RAM_X_COUNTER);    // set RAM x address count
+  SendData(x);
+  SendCommand(RAM_Y_COUNTER);   // set RAM y address count
+  SendData(y);
+  SendData(y>>8);
+}
+
 void Epd::SetPartialWindowAux(const unsigned char* buffer, int x, int y, int w, int l, int color){
-  this->set_xy_window(x>>3, ((x+w)>>3)-1, y, (y+l)-1);
+  SetXYWindow(x>>3, ((x+w)>>3)-1, y, (y+l)-1);
   DelayMs(2);
-  this->set_xy_counter(x>>3, y);
+  SetXYCounter(x>>3, y);
   DelayMs(2);
   switch(color){
     case COLOR_RED:
@@ -170,25 +189,6 @@ void Epd::SetPartialWindow(const unsigned char* buffer_black, const unsigned cha
   SetPartialWindowAux(buffer_red, 0, 0, this->width, this->height, COLOR_RED);
 }
 
-void Epd::set_xy_window(unsigned char xs, unsigned char xe, unsigned int ys, unsigned int ye){
-  SendCommand(RAM_X_START_END);    // set RAM x address start/end, in page 36
-  SendData(xs);    // RAM x address start at 00h;
-  SendData(xe);    // RAM x address end at 0fh(12+1)*8->104
-  SendCommand(RAM_Y_START_END);   // set RAM y address start/end, in page 37
-  SendData(ys);    // RAM y address start at 0;
-  SendData(ys>>8);
-  SendData(ye);    // RAM y address end at
-  SendData(ye>>8);   // RAM y address end at
-}
-
-void Epd::set_xy_counter(unsigned char x, unsigned char y){
-  SendCommand(RAM_X_COUNTER);    // set RAM x address count
-  SendData(x);
-  SendCommand(RAM_Y_COUNTER);   // set RAM y address count
-  SendData(y);
-  SendData(y>>8);
-}
-
 /**
  *  @brief: transmit partial data to the black part of SRAM
  */
@@ -207,16 +207,16 @@ void Epd::SetPartialWindowRed(const unsigned char* buffer_red, int x, int y, int
  * @brief: refresh and displays the frame
  */
 void Epd::DisplayFrame(const unsigned char* frame_buffer_black, const unsigned char* frame_buffer_red) {
-  this->SetPartialWindow(frame_buffer_black, frame_buffer_red, 0, 0, this->width, this->height);
-  this->DisplayFrame();
+  SetPartialWindow(frame_buffer_black, frame_buffer_red, 0, 0, this->width, this->height);
+  DisplayFrame();
 }
 
 /**
  * @brief: clear the frame data from the SRAM, this won't refresh the display
  */
 void Epd::ClearFrame(void) {
-  this->set_xy_window(0, (this->width>>3)-1, 0, this->height-1);
-  this->set_xy_counter(0, 0);
+  SetXYWindow(0, (this->width>>3)-1, 0, this->height-1);
+  SetXYCounter(0, 0);
   SendCommand(DATA_START_TRANSMISSION_1); // Write RAM (B/W)
   for (int i = 0; i < this->width * this->height / 8; i++) {
     SendData(0xFF);
@@ -226,7 +226,6 @@ void Epd::ClearFrame(void) {
   for (int i = 0; i < this->width * this->height / 8; i++) {
     SendData(0x00);
   }
-
 }
 
 /**

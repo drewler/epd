@@ -82,8 +82,8 @@ public:
   void Sleep(void);
 
 private:
-  void set_xy_window(unsigned char xs, unsigned char xe, unsigned int ys, unsigned int ye);
-  void set_xy_counter(unsigned char x, unsigned char y);
+  void SetXYWindow(unsigned char xs, unsigned char xe, unsigned int ys, unsigned int ye);
+  void SetXYCounter(unsigned char x, unsigned char y);
   void SetPartialWindowAux(const unsigned char* buffer, int x, int y, int w, int l, int color);
   unsigned int reset_pin;
   unsigned int dc_pin;
