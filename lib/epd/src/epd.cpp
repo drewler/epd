@@ -109,10 +109,10 @@ void Epd::SetPartialWindowAux(const unsigned char* buffer, int x, int y, int w, 
   DelayMs(2);
   switch(color){
     case COLOR_RED:
-      SendCommand(0x26); // Write RAM (red)
+      SendCommand(DATA_START_TRANSMISSION_2); // Write RAM (red)
       break;
     case COLOR_BW:
-      SendCommand(0x24); // Write RAM (B/W)
+      SendCommand(DATA_START_TRANSMISSION_1); // Write RAM (B/W)
     default:
       break;
   }
@@ -190,8 +190,6 @@ void Epd::set_xy_counter(unsigned char x, unsigned char y){
   SendData(y>>8);
 }
 
-
-
 /**
  *  @brief: transmit partial data to the black part of SRAM
  */
@@ -220,12 +218,12 @@ void Epd::DisplayFrame(const unsigned char* frame_buffer_black, const unsigned c
 void Epd::ClearFrame(void) {
   this->set_xy_window(0, (this->width>>3)-1, 0, this->height-1);
   this->set_xy_counter(0, 0);
-  SendCommand(0x24); // Write RAM (B/W)
+  SendCommand(DATA_START_TRANSMISSION_1); // Write RAM (B/W)
   for (int i = 0; i < this->width * this->height / 8; i++) {
     SendData(0xFF);
   }
 
-  SendCommand(0x26); // Write RAM (red)
+  SendCommand(DATA_START_TRANSMISSION_2); // Write RAM (red)
   for (int i = 0; i < this->width * this->height / 8; i++) {
     SendData(0x00);
   }
@@ -249,7 +247,7 @@ void Epd::DisplayFrame(void) {
  *         You can use Epd::Reset() to awaken and use Epd::Init() to initialize.
  */
 void Epd::Sleep() {
-  SendCommand(0x0F);
+  SendCommand(0x10);
   SendData(0x01);
   return;
 }
