@@ -58,7 +58,6 @@ void setup() {
   unsigned char image[1024];
   Paint paint(image, 128, 18);    //width should be the multiple of 8
 
-  //paint.SetRotate(ROTATE_270);
   paint.Clear(UNCOLORED);
   paint.DrawStringAt(0, 0, "e-Paper Demo", &Font12, COLORED);
   epd.SetPartialWindowBlack(paint.GetImage(), 12, 32, paint.GetWidth(), paint.GetHeight());

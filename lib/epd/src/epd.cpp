@@ -31,75 +31,74 @@ Epd::~Epd() {
 };
 
 Epd::Epd() {
-    reset_pin = RST_PIN;
-    dc_pin = DC_PIN;
-    cs_pin = CS_PIN;
-    busy_pin = BUSY_PIN;
-    width = EPD_WIDTH;
-    height = EPD_HEIGHT;
+  reset_pin = RST_PIN;
+  dc_pin = DC_PIN;
+  cs_pin = CS_PIN;
+  busy_pin = BUSY_PIN;
+  width = EPD_WIDTH;
+  height = EPD_HEIGHT;
 };
 
 const unsigned char init_data[] = {
-0x22,  0x11, 0x10, 0x00, 0x10, 0x00, 0x00, 0x11, 0x88, 0x80, 0x80, 0x80, 0x00, 0x00, 0x6A, 0x9B,
-0x9B, 0x9B, 0x9B, 0x00, 0x00, 0x6A, 0x9B, 0x9B, 0x9B, 0x9B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x04, 0x18, 0x04, 0x16, 0x01, 0x0A, 0x0A, 0x0A, 0x0A, 0x02, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x04, 0x08, 0x3C, 0x07, 0x00, 0x00, 0x00, 0x00,
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+  0x22,  0x11, 0x10, 0x00, 0x10, 0x00, 0x00, 0x11, 0x88, 0x80, 0x80, 0x80, 0x00, 0x00, 0x6A, 0x9B,
+  0x9B, 0x9B, 0x9B, 0x00, 0x00, 0x6A, 0x9B, 0x9B, 0x9B, 0x9B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x04, 0x18, 0x04, 0x16, 0x01, 0x0A, 0x0A, 0x0A, 0x0A, 0x02, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x04, 0x08, 0x3C, 0x07, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 int Epd::Init(void) {
-    /* this calls the peripheral hardware interface, see epdif */
-    if (IfInit() != 0) {
-        return -1;
-    }
-    /* EPD hardware init start */
-    Reset();
-    SendCommand(SW_RESET);
-    WaitUntilIdle();
-    SendCommand(ANALOG_BLOCK);
-    SendData(0x54);
-    SendCommand(DIGITAL_BLOCK);
-    SendData(0x3b);
-    SendCommand(DRIVER_OUTPUT);   // Set MUX as 296
-    SendData(0x27);
-    SendData(0x01);
-    SendData(0x00);
-    SendCommand(DUMMY_LINE_PERIOD);   // Set 100Hz
-    SendData(0x35);         // Set 130Hz
-    SendCommand(GATE_LINE_WIDTH);   // Set 100Hz
-    SendData(0x04);         // Set 130Hz
-    SendCommand(DATA_ENTRY_SEQUENCE);   // data enter mode
-    SendData(0x03);
-    SendCommand(SOURCE_DRIVING_VOLTAGE);   // set VSH,VSL value
-    SendData(0x41);    //      2D9  15v
-    SendData(0xa8);   //      2D9   5v
-    SendData(0x32);    //      2D9  -15v
-    SendCommand(WRITE_VCOM_REGISTER);           // vcom
-    SendData(0x68);           //-2.6V
-    SendCommand(BORDER_WAVEFORM);   // board
-    SendData(0x33);    //GS1-->GS1
-    SendCommand(WRITE_LUT_REGISTER);   // board
-    for(int i=0;i<70;i++){    // write LUT register with 29bytes instead of 30bytes 2D13
-      SendData(init_data[i]);
-    }
-    /* EPD hardware init end */
-    return 0;
-
+  /* this calls the peripheral hardware interface, see epdif */
+  if (IfInit() != 0) {
+    return -1;
+  }
+  /* EPD hardware init start */
+  Reset();
+  SendCommand(SW_RESET);
+  WaitUntilIdle();
+  SendCommand(ANALOG_BLOCK);
+  SendData(0x54);
+  SendCommand(DIGITAL_BLOCK);
+  SendData(0x3b);
+  SendCommand(DRIVER_OUTPUT);           // Set MUX as 296
+  SendData(0x27);
+  SendData(0x01);
+  SendData(0x00);
+  SendCommand(DUMMY_LINE_PERIOD);       // Set 100Hz
+  SendData(0x35);                       // Set 130Hz
+  SendCommand(GATE_LINE_WIDTH);         // Set 100Hz
+  SendData(0x04);                       // Set 130Hz
+  SendCommand(DATA_ENTRY_SEQUENCE);     // data enter mode
+  SendData(0x03);
+  SendCommand(SOURCE_DRIVING_VOLTAGE);  // set VSH,VSL value
+  SendData(0x41);                       // 2D9  15v
+  SendData(0xa8);                       // 2D9   5v
+  SendData(0x32);                       // 2D9  -15v
+  SendCommand(WRITE_VCOM_REGISTER);     // vcom
+  SendData(0x68);                       // -2.6V
+  SendCommand(BORDER_WAVEFORM);         // board
+  SendData(0x33);                       //GS1-->GS1
+  SendCommand(WRITE_LUT_REGISTER);      // board
+  for(int i=0;i<70;i++){                // write LUT register with 29bytes instead of 30bytes 2D13
+    SendData(init_data[i]);
+  }
+  /* EPD hardware init end */
+  return 0;
 }
 
 /**
  *  @brief: basic function for sending commands
  */
 void Epd::SendCommand(unsigned char command) {
-    DigitalWrite(dc_pin, LOW);
-    SpiTransfer(command);
+  DigitalWrite(dc_pin, LOW);
+  SpiTransfer(command);
 }
 
 /**
  *  @brief: basic function for sending data
  */
 void Epd::SendData(unsigned char data) {
-    DigitalWrite(dc_pin, HIGH);
-    SpiTransfer(data);
+  DigitalWrite(dc_pin, HIGH);
+  SpiTransfer(data);
 }
 
 void Epd::SetPartialWindowAux(const unsigned char* buffer, int x, int y, int w, int l, int color){
@@ -118,22 +117,22 @@ void Epd::SetPartialWindowAux(const unsigned char* buffer, int x, int y, int w, 
   }
 
   if (buffer != NULL) {
-        for(int i = 0; i < w  / 8 * l; i++) {
-            SendData(buffer[i]);
-        }
-  } else {
-        for(int i = 0; i < w  / 8 * l; i++) {
-          switch(color){
-            case COLOR_RED:
-              SendData(0x00);
-              break;
-            case COLOR_BW:
-            default:
-              SendData(0xFF);
-              break;
-          }
-        }
+    for(int i = 0; i < w  / 8 * l; i++) {
+      SendData(buffer[i]);
     }
+  } else {
+    for(int i = 0; i < w  / 8 * l; i++) {
+      switch(color){
+        case COLOR_RED:
+          SendData(0x00);
+          break;
+        case COLOR_BW:
+        default:
+          SendData(0xFF);
+          break;
+      }
+    }
+  }
   DelayMs(2);
 }
 
@@ -141,7 +140,7 @@ void Epd::SetPartialWindowAux(const unsigned char* buffer, int x, int y, int w, 
  *  @brief: Wait until the busy_pin goes HIGH
  */
 void Epd::WaitUntilIdle(void) {
-    int busy_value = HIGH;
+  int busy_value = HIGH;
 
   while(1){
     busy_value = digitalRead(BUSY_PIN);
@@ -157,10 +156,10 @@ void Epd::WaitUntilIdle(void) {
  *          see Epd::Sleep();
  */
 void Epd::Reset(void) {
-    DigitalWrite(reset_pin, LOW);
-    DelayMs(200);
-    DigitalWrite(reset_pin, HIGH);
-    DelayMs(200);
+  DigitalWrite(reset_pin, LOW);
+  DelayMs(200);
+  DigitalWrite(reset_pin, HIGH);
+  DelayMs(200);
 }
 
 /**

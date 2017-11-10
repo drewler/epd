@@ -63,32 +63,32 @@
 
 class Epd : EpdIf {
 public:
-    unsigned int width;
-    unsigned int height;
+  unsigned int width;
+  unsigned int height;
 
-    Epd();
-    ~Epd();
-    int  Init(void);
-    void SendCommand(unsigned char command);
-    void SendData(unsigned char data);
-    void WaitUntilIdle(void);
-    void Reset(void);
-    void SetPartialWindow(const unsigned char* buffer_black, const unsigned char* buffer_red, int x, int y, int w, int l);
-    void SetPartialWindowBlack(const unsigned char* buffer_black, int x, int y, int w, int l);
-    void SetPartialWindowRed(const unsigned char* buffer_red, int x, int y, int w, int l);
-    void DisplayFrame(const unsigned char* frame_buffer_black, const unsigned char* frame_buffer_red);
-    void DisplayFrame(void);
-    void ClearFrame(void);
-    void Sleep(void);
+  Epd();
+  ~Epd();
+  int  Init(void);
+  void SendCommand(unsigned char command);
+  void SendData(unsigned char data);
+  void WaitUntilIdle(void);
+  void Reset(void);
+  void SetPartialWindow(const unsigned char* buffer_black, const unsigned char* buffer_red, int x, int y, int w, int l);
+  void SetPartialWindowBlack(const unsigned char* buffer_black, int x, int y, int w, int l);
+  void SetPartialWindowRed(const unsigned char* buffer_red, int x, int y, int w, int l);
+  void DisplayFrame(const unsigned char* frame_buffer_black, const unsigned char* frame_buffer_red);
+  void DisplayFrame(void);
+  void ClearFrame(void);
+  void Sleep(void);
 
 private:
-    void set_xy_window(unsigned char xs, unsigned char xe, unsigned int ys, unsigned int ye);
-    void set_xy_counter(unsigned char x, unsigned char y);
-    void SetPartialWindowAux(const unsigned char* buffer, int x, int y, int w, int l, int color);
-    unsigned int reset_pin;
-    unsigned int dc_pin;
-    unsigned int cs_pin;
-    unsigned int busy_pin;
+  void set_xy_window(unsigned char xs, unsigned char xe, unsigned int ys, unsigned int ye);
+  void set_xy_counter(unsigned char x, unsigned char y);
+  void SetPartialWindowAux(const unsigned char* buffer, int x, int y, int w, int l, int color);
+  unsigned int reset_pin;
+  unsigned int dc_pin;
+  unsigned int cs_pin;
+  unsigned int busy_pin;
 };
 
 #endif /* EPD2IN9B_H */
