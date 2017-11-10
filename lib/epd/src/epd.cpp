@@ -69,16 +69,6 @@ int Epd::Init(void) {
     SendData(0x04);         // Set 130Hz
     SendCommand(0x11);   // data enter mode
     SendData(0x03);
-    /*
-    SendCommand(0x44);   // set RAM x address start/end, in page 36
-    SendData(0x00);    // RAM x address start at 00h;
-    SendData(0x0f);    // RAM x address end at 0fh(15+1)*8->128
-    SendCommand(0x45);   // set RAM y address start/end, in page 37
-    SendData(0x00);    // RAM y address start at 127h;
-    SendData(0x00);
-    SendData(0x27);    // RAM y address end at 00h;
-    SendData(0x01);    */
-
     SendCommand(0x04);   // set VSH,VSL value
     SendData(0x41);    //      2D9  15v
     SendData(0xa8);   //      2D9   5v
