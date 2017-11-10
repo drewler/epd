@@ -2,7 +2,7 @@
  *  @filename   :   epd2in9b.h
  *  @brief      :   Header file for Dual-color e-paper library epd2in9b.cpp
  *  @author     :   Yehui from Waveshare
- *  
+ *
  *  Copyright (C) Waveshare     July 31 2017
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -36,39 +36,27 @@
 //#define EPD_WIDTH       128
 //#define EPD_HEIGHT      296
 
-// EPD2IN9B commands
-#define PANEL_SETTING                               0x00
-#define POWER_SETTING                               0x01
-#define POWER_OFF                                   0x02
-#define POWER_OFF_SEQUENCE_SETTING                  0x03
-#define POWER_ON                                    0x04
-#define POWER_ON_MEASURE                            0x05
-#define BOOSTER_SOFT_START                          0x06
-#define DEEP_SLEEP                                  0x07
+// commands
+#define DRIVER_OUTPUT                               0x01
+#define SOURCE_DRIVING_VOLTAGE                      0x04
+#define DEEP_SLEEP                                  0x10
+#define DATA_ENTRY_SEQUENCE                         0x11
+#define SW_RESET                                    0x12
+#define DISPLAY_UPDATE_SEQUENCE_RUN                 0x20
+#define DISPLAY_UPDATE_SEQUENCE_CFG                 0x22
 #define DATA_START_TRANSMISSION_1                   0x24
-#define DATA_STOP                                   0x11
-#define DISPLAY_REFRESH                             0x12
 #define DATA_START_TRANSMISSION_2                   0x26
-#define PLL_CONTROL                                 0x30
-#define TEMPERATURE_SENSOR_COMMAND                  0x40
-#define TEMPERATURE_SENSOR_CALIBRATION              0x41
-#define TEMPERATURE_SENSOR_WRITE                    0x42
-#define TEMPERATURE_SENSOR_READ                     0x43
-#define VCOM_AND_DATA_INTERVAL_SETTING              0x50
-#define LOW_POWER_DETECTION                         0x51
-#define TCON_SETTING                                0x60
-#define TCON_RESOLUTION                             0x61
-#define GET_STATUS                                  0x71
-#define AUTO_MEASURE_VCOM                           0x80
-#define VCOM_VALUE                                  0x81
-#define VCM_DC_SETTING_REGISTER                     0x82
-#define PARTIAL_WINDOW                              0x90
-#define PARTIAL_IN                                  0x91
-#define PARTIAL_OUT                                 0x92
-#define PROGRAM_MODE                                0xA0
-#define ACTIVE_PROGRAM                              0xA1
-#define READ_OTP_DATA                               0xA2
-#define POWER_SAVING                                0xE3
+#define WRITE_VCOM_REGISTER                         0x2C
+#define WRITE_LUT_REGISTER                          0x32
+#define DUMMY_LINE_PERIOD                           0x3A
+#define GATE_LINE_WIDTH                             0x3B
+#define BORDER_WAVEFORM                             0x3C
+#define RAM_X_START_END                             0x44
+#define RAM_Y_START_END                             0x45
+#define RAM_X_COUNTER                               0x4E
+#define RAM_Y_COUNTER                               0x4F
+#define ANALOG_BLOCK                                0x74
+#define DIGITAL_BLOCK                               0x7E
 
 #define COLOR_BW  0x01
 #define COLOR_RED 0x02
