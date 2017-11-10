@@ -185,8 +185,8 @@ void Epd::Reset(void) {
  *  @brief: transmit partial data to the SRAM
  */
 void Epd::SetPartialWindow(const unsigned char* buffer_black, const unsigned char* buffer_red, int x, int y, int w, int l) {
-  SetPartialWindowAux(buffer_black, 0, 0, this->width, this->height, COLOR_BW);
-  SetPartialWindowAux(buffer_red, 0, 0, this->width, this->height, COLOR_RED);
+  SetPartialWindowAux(buffer_black, 0, 0, width, height, COLOR_BW);
+  SetPartialWindowAux(buffer_red, 0, 0, width, height, COLOR_RED);
 }
 
 /**
@@ -207,7 +207,7 @@ void Epd::SetPartialWindowRed(const unsigned char* buffer_red, int x, int y, int
  * @brief: refresh and displays the frame
  */
 void Epd::DisplayFrame(const unsigned char* frame_buffer_black, const unsigned char* frame_buffer_red) {
-  SetPartialWindow(frame_buffer_black, frame_buffer_red, 0, 0, this->width, this->height);
+  SetPartialWindow(frame_buffer_black, frame_buffer_red, 0, 0, width, height);
   DisplayFrame();
 }
 
@@ -215,15 +215,15 @@ void Epd::DisplayFrame(const unsigned char* frame_buffer_black, const unsigned c
  * @brief: clear the frame data from the SRAM, this won't refresh the display
  */
 void Epd::ClearFrame(void) {
-  SetXYWindow(0, (this->width>>3)-1, 0, this->height-1);
+  SetXYWindow(0, (width>>3)-1, 0, height-1);
   SetXYCounter(0, 0);
   SendCommand(DATA_START_TRANSMISSION_1); // Write RAM (B/W)
-  for (int i = 0; i < this->width * this->height / 8; i++) {
+  for (int i = 0; i < width * height / 8; i++) {
     SendData(0xFF);
   }
 
   SendCommand(DATA_START_TRANSMISSION_2); // Write RAM (red)
-  for (int i = 0; i < this->width * this->height / 8; i++) {
+  for (int i = 0; i < width * height / 8; i++) {
     SendData(0x00);
   }
 }
